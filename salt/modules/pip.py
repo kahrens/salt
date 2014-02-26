@@ -495,6 +495,9 @@ def install(pkgs=None,
         cmd_kwargs = dict(runas=user, cwd=cwd, saltenv=saltenv)
         if bin_env and os.path.isdir(bin_env):
             cmd_kwargs['env'] = {'VIRTUAL_ENV': bin_env}
+        # tell cmd.run_all to use the system locale (don't override to 'C')
+        if 'LC_ALL' in os.environ:
+            cmd_kwargs['reset_system_locale'] = False
         return __salt__['cmd.run_all'](' '.join(cmd), **cmd_kwargs)
     finally:
         for requirement in cleanup_requirements:
